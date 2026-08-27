@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rock | Fan Page</title>
+  <style>
+    :root {
+      --ink: #0d0d0f;
+      --surface: #19191d;
+      --surface-soft: #232328;
+      --text: #f7f2e8;
+      --muted: #c4bbae;
+      --gold: #e0a944;
+      --gold-light: #ffd174;
+      --red: #aa3928;
+      --line: rgba(255, 255, 255, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.22;
+      background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, #000, transparent 76%);
+      pointer-events: none;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 5vw;
+      border-bottom: 1px solid transparent;
+      transition: .2s ease;
+    }
+    .topbar.scrolled { background: rgba(10,10,12,.9); backdrop-filter: blur(12px); border-color: var(--line); }
+    .brand, h1, h2, .meter-value, .callout {
+      font-family: Impact, "Arial Black", sans-serif;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+    .brand { color: var(--gold-light); font-size: 1.65rem; }
+    .nav { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
+    .nav a { color: var(--muted); font-size: .92rem; }
+    .nav a:hover, .nav a:focus-visible { color: var(--gold-light); }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      align-items: end;
+      isolation: isolate;
+      padding: 8rem 5vw 4rem;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(90deg, rgba(5,5,7,.94) 3%, rgba(5,5,7,.64) 49%, rgba(5,5,7,.23)),
+        linear-gradient(0deg, var(--ink), transparent 38%),
+        url("public/img/the-rock-hero.jpg") center 18% / cover;
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 2rem; align-items: end; }
+    .eyebrow { color: var(--gold-light); font-size: .88rem; text-transform: uppercase; margin: 0 0 1rem; }
+    .eyebrow::before { content: ""; display: inline-block; width: 42px; height: 2px; margin-right: .65rem; vertical-align: middle; background: var(--gold); }
+    h1 { max-width: 7ch; margin: 0; font-size: clamp(4rem, 10vw, 7.5rem); line-height: .88; text-transform: uppercase; }
+    .hero-copy > p { max-width: 47rem; color: var(--muted); font-size: 1.1rem; line-height: 1.7; }
+    .actions { display: flex; gap: .85rem; flex-wrap: wrap; margin-top: 1.7rem; }
+    .button {
+      min-height: 3.15rem;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: .8rem 1.1rem;
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .button:hover, .button:focus-visible { transform: translateY(-3px); }
+    .button.primary { color: #17110a; background: var(--gold-light); box-shadow: 0 12px 26px rgba(0,0,0,.3); }
+    .button.secondary { border-color: var(--line); }
+    .mic-check { padding: 1.3rem; background: rgba(21,21,24,.86); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 18px 42px rgba(0,0,0,.3); }
+    .mic-check small { color: var(--gold-light); text-transform: uppercase; }
+    .mic-check p { min-height: 5rem; margin: .75rem 0; line-height: 1.65; font-size: 1.05rem; }
+    .mic-check span { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+    section { padding: 5.5rem 5vw; }
+    .section-head { max-width: 760px; margin-bottom: 2rem; }
+    h2 { margin: 0; font-size: clamp(2.3rem, 5vw, 4rem); line-height: .9; text-transform: uppercase; }
+    .section-head p { color: var(--muted); line-height: 1.7; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.15rem; }
+    .card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); transition: transform .25s ease, border-color .25s ease; }
+    .card:hover { transform: translateY(-6px); border-color: rgba(224,169,68,.7); }
+    .card img { display: block; width: 100%; height: 260px; object-fit: cover; object-position: center top; }
+    .card-copy { padding: 1.2rem; }
+    .card h3 { margin: 0 0 .6rem; font-size: 1.3rem; }
+    .card p, .reason p { margin: 0; color: var(--muted); line-height: 1.65; }
+
+    .eras { border-block: 1px solid var(--line); background: linear-gradient(120deg, rgba(170,57,40,.17), rgba(43,103,144,.16)); }
+    .era-layout { display: grid; grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr); gap: 1.25rem; }
+    .era-options { display: grid; align-content: start; gap: .75rem; }
+    .era-button { border: 1px solid var(--line); border-radius: 8px; padding: 1rem; text-align: left; color: var(--text); background: rgba(13,13,15,.54); cursor: pointer; transition: .2s ease; }
+    .era-button strong { display: block; margin-bottom: .3rem; font-size: 1.05rem; }
+    .era-button span { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+    .era-button.active { border-color: var(--gold); background: rgba(224,169,68,.13); transform: translateX(5px); }
+    .era-display { padding: 1.25rem; min-height: 390px; border: 1px solid var(--line); border-radius: 8px; background: rgba(19,19,22,.9); }
+    .era-display img { width: 100%; height: 205px; display: block; object-fit: cover; border-radius: 5px; }
+    .era-display h3 { margin: 1rem 0 .6rem; font-size: 1.7rem; }
+    .era-display p { color: var(--muted); line-height: 1.65; margin: 0; }
+    .tags { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
+    .tags span { border: 1px solid var(--line); border-radius: 999px; padding: .45rem .7rem; font-size: .85rem; }
+
+    .reasons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .reason { min-height: 190px; padding: 1.15rem; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(180deg, var(--surface-soft), var(--surface)); }
+    .reason-number { color: var(--gold-light); font-weight: 700; font-size: .86rem; }
+    .reason h3 { margin: .75rem 0 .55rem; font-size: 1.2rem; }
+
+    .anthem-layout { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1.2rem; }
+    .anthem-copy, .meter-card { padding: 1.45rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .anthem-copy p { margin: 0; color: var(--muted); line-height: 1.75; }
+    .callout { margin: 1.25rem 0; color: var(--gold-light); font-size: clamp(1.8rem, 3.8vw, 2.7rem); text-transform: uppercase; line-height: .95; }
+    .meter-card h3 { margin: 0 0 1rem; font-size: 1.25rem; }
+    .meter { height: 14px; overflow: hidden; border: 1px solid var(--line); border-radius: 99px; background: #0e0e10; }
+    .meter-fill { width: 18%; height: 100%; background: linear-gradient(90deg, var(--red), var(--gold-light)); transition: width .45s ease; }
+    .meter-value { margin-top: 1rem; color: var(--gold-light); font-size: 3rem; line-height: 1; }
+    .meter-card p { color: var(--muted); line-height: 1.65; }
+    footer { padding: 2rem 5vw 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) { .hero-grid, .era-layout, .anthem-layout, .card-grid, .reasons { grid-template-columns: 1fr; } .hero { min-height: auto; } }
+    @media (max-width: 620px) { .topbar { align-items: flex-start; flex-direction: column; } .nav { gap: .8rem; } .hero { padding-top: 10.5rem; } .actions { flex-direction: column; } .button { width: 100%; } section { padding-block: 4rem; } }
+  </style>
+</head>
+<body>
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#home">THE ROCK</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#spotlight">Spotlight</a>
+      <a href="#eras">Eras</a>
+      <a href="#facts">Fast Facts</a>
+      <a href="#reasons">Why Fans Love Him</a>
+      <a href="#anthem">Fan Anthem</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Legendary presence. Relentless work ethic.</p>
+        <h1>The Rock</h1>
+        <p>A fan-made tribute to Dwayne "The Rock" Johnson: arena-defining charisma, blockbuster momentum, and the kind of drive that makes people want to show up and go harder.</p>
+        <div class="actions">
+          <a class="button primary" href="#spotlight">Enter The Spotlight</a>
+          <button class="button secondary" id="quoteButton" type="button">Hit The Catchphrase</button>
+        </div>
+      </div>
+      <aside class="mic-check" aria-live="polite">
+        <small>Mic Check</small>
+        <p id="quoteText">"Success isn't owned. It's leased. And rent is due every day."</p>
+        <span id="quoteCredit">One of the mindsets fans connect with most: show up, work hard, repeat.</span>
+      </aside>
+    </div>
+  </section>
+
+  <main>
+    <section id="spotlight">
+      <div class="section-head reveal">
+        <h2>Why The Spotlight Fits</h2>
+        <p>The Rock has always carried a rare mix of intensity and charm. Fans come for the power, stay for the humor, and keep rooting because the work ethic feels real.</p>
+      </div>
+      <div class="card-grid">
+        <article class="card reveal"><img src="public/img/the-rock-wwe.jpg" alt="The Rock in a WWE arena"><div class="card-copy"><h3>Electrifying in the ring</h3><p>The swagger, the entrance, the stare-down, the mic work. Few performers ever commanded an arena with this much confidence.</p></div></article>
+        <article class="card reveal"><img src="public/img/the-rock-hero.jpg" alt="Portrait of Dwayne Johnson"><div class="card-copy"><h3>Built for star power</h3><p>On screen or on a press tour, he brings polished presence that still feels grounded, making every appearance feel larger than life.</p></div></article>
+        <article class="card reveal"><img src="public/img/the-rock-wwe.jpg" alt="The Rock at a WWE event"><div class="card-copy"><h3>Connection with fans</h3><p>Whether joking, motivating, or telling a story, the energy feels directed at the room, not merely performed at it.</p></div></article>
+      </div>
+    </section>
+
+    <section id="facts">
+      <div class="section-head reveal"><h2>Fast Facts</h2><p>A few milestones behind the larger-than-life persona.</p></div>
+      <div class="reasons">
+        <article class="reason reveal"><span class="reason-number">1972</span><h3>Born in California</h3><p>Dwayne Douglas Johnson was born in Hayward, California, on May 2, 1972.</p></article>
+        <article class="reason reveal"><span class="reason-number">1996</span><h3>WWE debut</h3><p>He made his WWE debut as Rocky Maivia before becoming the unmistakable Rock.</p></article>
+        <article class="reason reveal"><span class="reason-number">Miami</span><h3>Football roots</h3><p>Before wrestling, he played college football for the University of Miami Hurricanes.</p></article>
+        <article class="reason reveal"><span class="reason-number">Beyond the ring</span><h3>Producer and founder</h3><p>His career also includes film production and business ventures alongside acting and wrestling.</p></article>
+      </div>
+    </section>
+
+    <section class="eras" id="eras">
+      <div class="section-head reveal"><h2>Choose Your Rock Era</h2><p>Different fans lock onto different versions of The Rock. Pick an era to see which side of the legend hits hardest for you.</p></div>
+      <div class="era-layout">
+        <div class="era-options reveal" role="tablist" aria-label="Rock eras">
+          <button class="era-button active" type="button" data-era="wwe" role="tab" aria-selected="true"><strong>WWE icon</strong><span>Catchphrases, confidence, crowd control, and all-time arena energy.</span></button>
+          <button class="era-button" type="button" data-era="hollywood" role="tab" aria-selected="false"><strong>Blockbuster lead</strong><span>Action, comedy, and a screen presence that carries huge set pieces.</span></button>
+          <button class="era-button" type="button" data-era="hustle" role="tab" aria-selected="false"><strong>Motivation machine</strong><span>Discipline, ambition, and a daily reminder to outwork yesterday.</span></button>
+        </div>
+        <article class="era-display reveal">
+          <img id="eraImage" src="public/img/the-rock-wwe.jpg" alt="The Rock in WWE">
+          <h3 id="eraTitle">The crowd-commanding showman</h3>
+          <p id="eraDescription">This is the version of The Rock that turned entrances, eyebrow raises, and one-liners into a live-event art form. He could shift an arena's mood in seconds and make every moment feel headline-sized.</p>
+          <div class="tags" id="eraTags"><span>Mic mastery</span><span>Main-event aura</span><span>Instant electricity</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="reasons">
+      <div class="section-head reveal"><h2>Why Fans Love Him</h2><p>The appeal is bigger than fame. For a lot of people, The Rock represents momentum: confidence when the room is loud, humor when things get tense, and discipline when results feel far away.</p></div>
+      <div class="reasons">
+        <article class="reason reveal"><span class="reason-number">01</span><h3>Presence</h3><p>He walks into a scene and it immediately has shape, direction, and volume.</p></article>
+        <article class="reason reveal"><span class="reason-number">02</span><h3>Work ethic</h3><p>The training, repetition, and consistency are part of the mythology for a reason.</p></article>
+        <article class="reason reveal"><span class="reason-number">03</span><h3>Humor</h3><p>Even with all the intensity, he knows how to keep the energy fun instead of stiff.</p></article>
+        <article class="reason reveal"><span class="reason-number">04</span><h3>Versatility</h3><p>Wrestling icon, movie star, entrepreneur, motivational figure. The range is part of the fandom.</p></article>
+      </div>
+    </section>
+
+    <section id="anthem">
+      <div class="section-head reveal"><h2>Fan Anthem</h2><p>Every tribute to The Rock needs a little drama. This one comes with an energy meter, because that is simply the appropriate level of intensity.</p></div>
+      <div class="anthem-layout">
+        <div class="anthem-copy reveal"><p>The Rock fandom lives somewhere between a giant arena roar and early-morning discipline. It is not only about famous moments. It is about the feeling that confidence can be trained, charisma can be sharpened, and hard work can become part of your identity.</p><div class="callout">Bring the fire. Bring the focus. Bring the people's energy.</div><button class="button primary" id="meterButton" type="button">Electrify The Meter</button></div>
+        <aside class="meter-card reveal"><h3>Electrification Level</h3><div class="meter" aria-hidden="true"><div class="meter-fill" id="meterFill"></div></div><div class="meter-value" id="meterValue">18%</div><p id="meterLabel">Warm-up mode. Good energy, but the arena lights have not fully kicked in yet.</p></aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>Fan-made single-page tribute to Dwayne "The Rock" Johnson. Built with plain HTML, CSS, and JavaScript.</footer>
+
+  <script>
+    const quotes = [
+      ['"Success isn\'t owned. It\'s leased. And rent is due every day."', 'That daily-work mindset is one reason his fan base reaches far beyond wrestling and film.'],
+      ['"Be humble. Be hungry. And always be the hardest worker in the room."', 'Fans love the mix of ambition and discipline in almost every Rock-era pep talk.'],
+      ['"Blood, sweat and respect. First two you give. Last one you earn."', 'The message lands because it feels like effort first, spotlight second.']
+    ];
+    let quoteIndex = 0;
+    document.getElementById('quoteButton').addEventListener('click', () => {
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+      document.getElementById('quoteText').textContent = quotes[quoteIndex][0];
+      document.getElementById('quoteCredit').textContent = quotes[quoteIndex][1];
+    });
+
+    const eras = {
+      wwe: { title: 'The crowd-commanding showman', description: 'This is the version of The Rock that turned entrances, eyebrow raises, and one-liners into a live-event art form. He could shift an arena\'s mood in seconds and make every moment feel headline-sized.', image: 'public/img/the-rock-wwe.jpg', position: 'center center', alt: 'The Rock in WWE', tags: ['Mic mastery', 'Main-event aura', 'Instant electricity'] },
+      hollywood: { title: 'The blockbuster engine', description: 'Movie-star Rock is all momentum. He brings scale, comic timing, and just enough self-awareness to make action-heavy stories feel fun instead of mechanical.', image: 'public/img/the-rock-hero.jpg', position: 'center 30%', alt: 'The Rock in a movie scene', tags: ['Action lead', 'Big-screen charisma', 'Adventure energy'] },
+      hustle: { title: 'The discipline icon', description: 'For plenty of fans, this is the strongest version of all: a public example of consistency, training, and turning motivation into a daily habit instead of a passing mood.', image: 'public/img/the-rock-hero.jpg', position: 'center 28%', alt: 'Portrait of The Rock', tags: ['Routine', 'Relentless focus', 'No-excuses mindset'] }
+    };
+    document.querySelectorAll('.era-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const era = eras[button.dataset.era];
+        document.querySelectorAll('.era-button').forEach((item) => { item.classList.remove('active'); item.setAttribute('aria-selected', 'false'); });
+        button.classList.add('active'); button.setAttribute('aria-selected', 'true');
+        document.getElementById('eraImage').src = era.image;
+        document.getElementById('eraImage').alt = era.alt;
+        document.getElementById('eraImage').style.objectPosition = era.position;
+        document.getElementById('eraTitle').textContent = era.title;
+        document.getElementById('eraDescription').textContent = era.description;
+        const tags = document.getElementById('eraTags'); tags.innerHTML = '';
+        era.tags.forEach((tag) => { const chip = document.createElement('span'); chip.textContent = tag; tags.appendChild(chip); });
+      });
+    });
+
+    const levels = [[18, 'Warm-up mode. Good energy, but the arena lights have not fully kicked in yet.'], [52, 'The crowd is getting loud. The eyebrow is halfway loaded.'], [81, 'Now we are talking. This feels like entrance-music volume.'], [100, 'Full electricity. Absolute main-event conditions.']];
+    let levelIndex = 0;
+    document.getElementById('meterButton').addEventListener('click', () => {
+      levelIndex = (levelIndex + 1) % levels.length;
+      const [level, label] = levels[levelIndex];
+      document.getElementById('meterFill').style.width = level + '%';
+      document.getElementById('meterValue').textContent = level + '%';
+      document.getElementById('meterLabel').textContent = label;
+    });
+
+    const topbar = document.getElementById('topbar');
+    addEventListener('scroll', () => topbar.classList.toggle('scrolled', scrollY > 20));
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: .14 });
+    document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+  </script>
+</body>
+</html>
